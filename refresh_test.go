@@ -2,6 +2,7 @@ package refreshtoken
 
 import (
 	"fmt"
+	"sync"
 	"testing"
 	"time"
 
@@ -28,6 +29,7 @@ func TestGetToken(t *testing.T) {
 	tkn := tokenize{
 		t:           &fakeTokenClient{},
 		tokenString: "",
+		mux:         &sync.Mutex{},
 	}
 
 	go tkn.Start()
@@ -40,8 +42,14 @@ func TestGetToken(t *testing.T) {
 }
 
 func TestGetTokenExpiredShouldRefreshAutomaticly(t *testing.T) {
-	tkn := Tokenize()
-	tkn.t = fakeTokenClient{}
+	tkn := tokenize{
+		t:           &fakeTokenClient{},
+		tokenString: "",
+		mux:         &sync.Mutex{},
+	}
+
+	go tkn.Start()
+
 	tokenString := tkn.Token()
 	fmt.Println(tokenString)
 
