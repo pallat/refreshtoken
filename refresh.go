@@ -18,14 +18,14 @@ type tokenizer interface {
 type tokenize struct {
 	t           tokenizer
 	tokenString string
-	mux         *sync.Mutex
+	mux         *sync.RWMutex
 }
 
 func Tokenize() *tokenize {
 	t := &tokenize{
 		t:           &tokenClient{lifeTime: 1},
 		tokenString: "",
-		mux:         &sync.Mutex{},
+		mux:         &sync.RWMutex{},
 	}
 
 	go t.Start()
@@ -52,8 +52,8 @@ func (t *tokenize) Start() {
 }
 
 func (t *tokenize) Token() string {
-	t.mux.Lock()
-	defer t.mux.Unlock()
+	t.mux.RLock()
+	defer t.mux.RUnlock()
 	return t.tokenString
 }
 

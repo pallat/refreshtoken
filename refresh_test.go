@@ -29,7 +29,7 @@ func TestGetToken(t *testing.T) {
 	tkn := tokenize{
 		t:           &fakeTokenClient{},
 		tokenString: "",
-		mux:         &sync.Mutex{},
+		mux:         &sync.RWMutex{},
 	}
 
 	go tkn.Start()
@@ -45,7 +45,7 @@ func TestGetTokenExpiredShouldRefreshAutomaticly(t *testing.T) {
 	tkn := tokenize{
 		t:           &fakeTokenClient{},
 		tokenString: "",
-		mux:         &sync.Mutex{},
+		mux:         &sync.RWMutex{},
 	}
 
 	go tkn.Start()
